@@ -127,4 +127,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    public void closeTcpServer(View view) {
+        if(mSyncService.getTcpServer() != null && mSyncService.getTcpServer().isLaunched()){
+            mSyncService.getTcpServer().shutDown();
+        }else{
+            show("Tcp服务没有启动");
+        }
+
+    }
+
+    public void disconnectTcpServer(View view) {
+        if(mSyncService.getTcpClient() != null && mSyncService.getTcpClient().isConnected()){
+            mSyncService.getTcpClient().disconnect();
+        }else{
+            show("没有连接到Tcp服务");
+        }
+    }
 }

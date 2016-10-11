@@ -31,9 +31,9 @@ public final class TcpServer {
     private boolean launched;
 
     public static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
-    ServerBootstrap mBootstrap = new ServerBootstrap();
-    EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    EventLoopGroup workerGroup = new NioEventLoopGroup();
+    ServerBootstrap mBootstrap;
+    EventLoopGroup bossGroup;
+    EventLoopGroup workerGroup;
 
     Channel mChannel;
 
@@ -46,6 +46,10 @@ public final class TcpServer {
     }
 
     public void startService(final ServerListener serverListener){
+        mBootstrap = new ServerBootstrap();
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup();
+
         mBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
@@ -74,6 +78,7 @@ public final class TcpServer {
 
     public void shutDown(){
         if(mChannel!=null){
+            launched = false;
             mChannel.closeFuture();
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
